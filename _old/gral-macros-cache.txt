@@ -1,0 +1,78 @@
+MACRO 9 "55" Ability_Creature_Cursed_02
+.npc add 3296
+END
+MACRO 10 "60e" Ability_Creature_Cursed_02
+.npc add 14375
+END
+MACRO 18 "attack" Ability_Parry
+/w Gortak d attack my target
+/w Leo d attack my target
+/w Frostie d attack my target
+END
+MACRO 11 "del" Ability_Hunter_SniperShot
+.npc delete
+END
+MACRO 7 "Die" Ability_Creature_Cursed_01
+.die
+END
+MACRO 6 "macro" Ability_Creature_Cursed_04
+/script UIErrorsFrame:Show()
+/macro
+END
+MACRO 5 "pCD" Ability_Creature_Cursed_01
+.cooldown clear
+.reset stats
+END
+MACRO 19 "Polymorph" Spell_Nature_Polymorph
+/w Frostie cast Polymorph
+END
+MACRO 15 "pRev" Ability_Creature_Cursed_01
+/target player
+/w Regina .revive
+.repair
+/target Ocytos
+.revive
+.repair
+/target Leo
+.revive
+.repair
+/target Frostie
+.revive
+.repair
+/target Sanatorius
+.revive 
+.repair
+/target Platinus
+.revive 
+.repair
+END
+MACRO 21 "R&CD" Ability_Creature_Cursed_01
+/w Leo .revive
+.repair
+.cooldown clear
+.reset stats
+END
+MACRO 8 "Respawn" Ability_Creature_Cursed_01
+.respawn
+END
+MACRO 2 "sp1" Ability_Creature_Cursed_01
+/target player
+.mod aspeed 1
+END
+MACRO 3 "sp5" Ability_Creature_Cursed_01
+/target player
+.mod aspeed 5
+END
+MACRO 13 "StartAutoAttack" Ability_Hunter_BeastCall02
+/script if not IsCurrentAction(48) then UseAction(48) end;
+END
+MACRO 4 "taxi" Ability_Creature_Cursed_01
+.taxicheat on
+END
+MACRO 1 "volar" Ability_Creature_Cursed_01
+.gm fly on
+END
+MACRO 20 "zBufs" Ability_Creature_Cursed_01
+/run DrsGetBuffs("player",true)
+/run DrsAssert(DrsIsBuffActive("Ability_Druid_CatForm"))
+END

@@ -1,0 +1,57 @@
+MACRO 16777221 "AssisteMe" Ability_DualWield
+/p d attack my target
+END
+MACRO 16777225 "Bear" Ability_Racial_BearForm
+/run if not DrsIsBuffActive("Ability_Racial_BearForm") then CastSpellByName("Dire Bear Form") end
+END
+MACRO 16777232 "CancelForm" Ability_Rogue_Disguise
+/run f=DrsCurrentDruidForm(); if f ~= 0 then CastShapeshiftForm(f) else DrsCast("Rejuvenation", "player") end
+END
+MACRO 16777226 "Cat" Ability_Druid_CatForm
+/run if not DrsIsBuffActive("Ability_Druid_CatForm") then CastSpellByName("Cat Form") end
+END
+MACRO 16777223 "Follow" Ability_Rogue_Trip
+/p flee
+/p follow
+END
+MACRO 16777235 "mAbPoison" Spell_Nature_NullifyPoison_02
+/run DrsCastMouse("Abolish Poison", true)
+END
+MACRO 16777238 "mInnervate" Spell_Nature_Lightning
+/run DrsCastMouse("Innervate", true)
+END
+MACRO 16777236 "mMothW" Spell_Nature_Regeneration
+/run DrsCastMouse("Mark of the Wild", true)
+END
+MACRO 16777229 "moHealT" Spell_Nature_HealingTouch
+/run DrsCastMouse("Healing touch", true)
+END
+MACRO 16777217 "Monfire/Attack" Spell_Frost_ChillingBolt
+/script if not IsCurrentAction(48) then UseAction(48) end;
+/cast Moonfire
+END
+MACRO 16777222 "mRCurse" Spell_Holy_RemoveCurse
+/run DrsCastMouse("Remove Curse", true)
+END
+MACRO 16777228 "mRegrowth" Spell_Nature_ResistNature
+/run DrsCastMouse("Regrowth", true)
+END
+MACRO 16777239 "mRejuv" Spell_Nature_Rejuvenation
+/run DrsCastMouse("Rejuvenation", true)
+END
+MACRO 16777237 "mThorns" Spell_Nature_Thorns
+/run DrsCastMouse("Thorns", true)
+END
+MACRO 16777233 "ProwlOnce" Ability_Ambush
+/run if not DrsIsBuffActive("Ability_Ambush") then CastSpellByName("Prowl") end
+END
+MACRO 16777224 "Stay" Ability_Ensnare
+/p stay
+END
+MACRO 16777231 "test" Ability_CheapShot
+/run ReloadUI()
+/macro
+END
+MACRO 16777234 "TravelOnce" Ability_Druid_TravelForm
+/run if not DrsIsBuffActive("Ability_Druid_TravelForm") then CastSpellByName("Travel Form") end
+END
