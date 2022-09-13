@@ -1,7 +1,8 @@
 --[[
-
-  - heal: /run drsDoBasicPriest()
+  For party of two
+  - heal/wand-attack: /run drsDoBasicPriest()
   - escape-protect: /run drsDoEscapePriest()
+  - spell attack: /run drsDoSpellsPriest()
 
 ]]
 
