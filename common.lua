@@ -1,4 +1,5 @@
 
+print("-- drodsou started")
 
 function drsVersion()
   print("wow_drodsou v1.01")
@@ -42,6 +43,16 @@ function drsHasBuff(t,buf)
   return false
 end
 
+function drsPrintBuff()
+  for i=1,40 do 
+    local b,_,_,_,_,_,_,_,_ = UnitBuff("target",i)
+    if b then print(b) end
+    local db,_,_,_,_,_,_,_,_ = UnitDebuff("target",i)
+    if db then print(db) end
+    if not b and not db then break end
+  end
+end
+
 function drsGetSpellId(spellName)
 	local i = 1
 	while true do
@@ -52,4 +63,3 @@ function drsGetSpellId(spellName)
 	end
 	return 0
 end
-

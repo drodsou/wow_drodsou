@@ -16,10 +16,10 @@ function drsDoEscapePriest()
     tgt1 = "player" 
     tgt2 = "party1"
   end
-  if not castDone then castDone = drsPriestHeal1(tgt1, 2) end
-  if not castDone then castDone = drsPriestHeal1(tgt2, 2) end
-  if not castDone then castDone = drsPriestHeal2(tgt1, 0.85) end
-  if not castDone then castDone = drsPriestHeal2(tgt2, 0.85) end
+  if not castDone then castDone = drsPriestShield(tgt1, 2) end
+  if not castDone then castDone = drsPriestShield(tgt2, 2) end
+  if not castDone then castDone = drsPriestRenew(tgt1, 0.85) end
+  if not castDone then castDone = drsPriestRenew(tgt2, 0.85) end
   --if not castDone then castDone = FEAR end
   
   if drsMana("player") < 0.2 then
@@ -28,9 +28,9 @@ function drsDoEscapePriest()
 end
 
 --------- HEAL
-function drsPriestHeal1(tgt, lvl)
-  local cooldown ,_,_ = GetSpellCooldown(drsGetSpellId("Power Word: Shield"), "spell")
- if cooldown == 0 and drsHealth(tgt) < lvl and not drsHasBuff(tgt,"PowerWordShield") and not drsHasBuff(tgt,"AshesToAshes") then
+function drsPriestShield(tgt, lvl)
+  local cdShield ,_,_ = GetSpellCooldown(drsGetSpellId("Power Word: Shield"), "spell")
+ if cdShield == 0 and drsHealth(tgt) < lvl and not drsHasBuff(tgt,"PowerWordShield") and not drsHasBuff(tgt,"AshesToAshes") then
    TargetUnit(tgt)
    CastSpellByName("Power Word: Shield()")
    return true
@@ -38,8 +38,7 @@ function drsPriestHeal1(tgt, lvl)
  return false
 end
 
-
-function drsPriestHeal2(tgt, lvl)
+function drsPriestRenew(tgt, lvl)
  if drsHealth(tgt) < lvl and not drsHasBuff(tgt,"Holy_Renew") then
    TargetUnit(tgt)
    CastSpellByName("Renew()")
@@ -48,7 +47,7 @@ function drsPriestHeal2(tgt, lvl)
  return false
 end
 
-function drsPriestHeal3(tgt, lvl)
+function drsPriestLesserHeal(tgt, lvl)
  if drsHealth(tgt) < lvl then
    TargetUnit(tgt)
    CastSpellByName("Lesser Heal()")
@@ -58,6 +57,28 @@ function drsPriestHeal3(tgt, lvl)
 end
 
 
+-- if shield asume priest is being attacked, use "fade" if possible
+function drsPriestFade()
+  local cdFade ,_,_ = GetSpellCooldown(drsGetSpellId("Fade"), "spell")
+  if cdFade == 0 and drsHasBuff("player","PowerWordShield") then
+    CastSpellByName("Fade()")
+    return true
+  end
+  return false
+end
+
+
+function drsPriestPain(minMana)
+  if drsMana("player") > minMana and not drsHasBuff("target","ShadowWordPain") then
+    CastSpellByName("Shadow Word: Pain()")
+    return true
+  end
+  return false
+end
+
+
+
+-- MACRO
 function drsDoBasicPriest()
  local castDone = false
  local tgt1 = "party1"
@@ -66,25 +87,28 @@ function drsDoBasicPriest()
    tgt1 = "player" 
    tgt2 = "party1"
  end
- 
- if not castDone then castDone = drsPriestHeal1(tgt1, 0.65) end
- if not castDone then castDone = drsPriestHeal1(tgt2, 0.65) end
- if not castDone then castDone = drsPriestHeal2(tgt1, 0.8) end
- if not castDone then castDone = drsPriestHeal2(tgt2, 0.8) end
- if not castDone then castDone = drsPriestHeal3(tgt1, 0.65) end      
+
+ -- heal
+ if not castDone then castDone = drsPriestShield(tgt1, 0.65) end
+ if not castDone then castDone = drsPriestShield(tgt2, 0.65) end
+ if not castDone then castDone = drsPriestRenew(tgt1, 0.8) end
+ if not castDone then castDone = drsPriestRenew(tgt2, 0.8) end
+ if not castDone then castDone = drsPriestFade() end
+ if not castDone then castDone = drsPriestLesserHeal(tgt1, 0.65) end     
+
  if drsIsAttackable("party1target") then
    FollowUnit("party1")
    TargetUnit("party1target")
 
-   if castDone then
-     drsStartAttack()
-   else 
-     drsStartShoot()
-   end
+   -- attack
+   if not castDone then castDone = drsPriestPain(0.65) end     
+   if not castDone then drsStartShoot() end     
+
  else
-   FollowUnit("party1")
+    FollowUnit("party1")
  end
- 
+
+ -- OOM?
  if drsMana("player") < 0.2 then
    SendChatMessage("OOM!")
  end
@@ -93,7 +117,7 @@ end
 
 -- ATTACK
 
-
+--[[
 function drsResetPriestSpell()
   drsPriestSeq = {
       {"Shadow Word: Pain()", 18, time() - 3600},
@@ -128,5 +152,5 @@ if drsMana("player") < 0.2 then
 end
 end
 
-
+]]
 

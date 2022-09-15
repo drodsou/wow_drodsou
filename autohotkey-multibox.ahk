@@ -1,49 +1,57 @@
+#SingleInstance Force
+
 ; -- Modifiers
 ; ^     Ctrl
 ; !     Alt
 ; +     Shift
 ; <^>!  AltGr	
 ; #     WinKey
-; ~      ??
-
-; -- for two-box WoW on same computer, two monitors, automate alt-tab, sendkey, alt-tab
-; -- open both WoW windows, run this script, click in first one (will minimize), then click in second one (will minimize)
+; ~      OnKeyDown, dont wait for keyup
 
 ; -- WARNING: multiboxing may be unauthorized by some servers, and this method may be seen as unauthorized automation, 
 ; -- Alternative is manually click on desired WoW window and press key, or having a second computer/keyboard 
 
-WinWaitActive, World of Warcraft
-WinGet, wow1, ID
-WinMinimize
-WinWaitActive, World of Warcraft
-WinGet, wow2, ID
-WinMinimize
 
-WinActivate, % "ahk_id " wow2
-WinActivate, % "ahk_id " wow1
+WinGet, wowid, list, World of Warcraft 
 
-
-wow2send(theKey){
-  global wow2
-  global wow1
-  WinActivate, % "ahk_id " wow2
-  Send, %theKey%
-  WinActivate, % "ahk_id " wow1
+wowsend(key, alsoFg:=True){
+  global wowid2, wowid3, wowid4, wowid5
+  if (alsoFg) { 
+    KeyWait, %key%, D 
+  }
+  IfWinActive, World of Warcraft 
+  { 
+    ControlSend,, {%key%}, ahk_id %wowid2% 
+  }
 }
 
-; -- la i envia l antes, para dejar de seguir (flecha arriba) antes de ejecutar supermacro
-;<^>!i::wow2send("li")
-<^>!i::wow2send("i")
-<^>!o::wow2send("o")
-<^>!p::wow2send("p")
-<^>!l::wow2send("l")
+
+~i::wowsend("i")
+~space::wowsend("space")
+
+/*
+<^>!i::wowsend("i", False)
+<^>!o::wowsend("o", False)
+<^>!p::wowsend("p", False)
+<^>!l::wowsend("l", False)
+*/
 
 
-; ---- test
-;F3::
-;WinActivate, % "ahk_id " wow1
-;Return
 
-;F4::
-;WinActivate, % "ahk_id " wow2
-;Return
+
+/*
+--------------------------------------------------------
+; example sending several keys
+; the "l" is only sent to bg windows, eg stop following
+~i::
+  wowsend("l", False)
+  wowsend("i")
+Return
+
+; example special key
+~space::wowsend("space")
+---------------------------------------------------------
+*/
+
+
+
