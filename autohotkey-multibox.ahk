@@ -27,6 +27,7 @@ wowsend(key, alsoFg:=True){
 
 
 ~i::wowsend("i")
+<^>!p::wowsend("p")
 ~F8::wowsend("F8")
 
 /*
