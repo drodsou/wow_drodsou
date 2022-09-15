@@ -27,9 +27,10 @@ wowsend(key, alsoFg:=True){
 
 
 ~i::wowsend("i")
-~space::wowsend("space")
+~F8::wowsend("F8")
 
 /*
+~space::wowsend("space")
 <^>!i::wowsend("i", False)
 <^>!o::wowsend("o", False)
 <^>!p::wowsend("p", False)

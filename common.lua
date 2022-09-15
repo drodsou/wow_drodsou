@@ -54,12 +54,55 @@ function drsPrintBuff()
 end
 
 function drsGetSpellId(spellName)
+  -- remove () at the end of the spellName if passed
+  local spName = string.gsub(spellName, "[()]","")
 	local i = 1
 	while true do
 	   local iName, iRank = GetSpellName(i, BOOKTYPE_SPELL)
 	   if not iName then break end
-       if string.find(iName, spellName) then return i end
+       if string.find(iName, spName) then return i end
 	   i = i + 1
 	end
 	return 0
+end
+
+
+function drsSpellReady(spellName)
+  local spellId = drsGetSpellId(spellName)
+  if spellId == 0 then
+    print("> ERROR drodsou drsGetSpellId: spellName not found " .. spellName)
+    return false
+  end
+  local cooldown ,_, enabled = GetSpellCooldown(spellId, "spell")
+  if cooldown == 0 then return true end
+  return false
+end
+
+
+-- 
+--   example spells: {{"spellname()", timeoutInSeconds}, ... }
+-- {
+--   {"Shadow Word: Pain()", 18},
+--   {"Smite()", 0},
+-- }
+-- 
+-- create spell sequence
+function drsSeqCreate(spells)
+  for i,spell in ipairs(spells) do 
+    spell[3] = time() - 3600
+  end
+  return spells
+end
+
+-- cast next sequence spell
+-- macro ex: /run drsSeqCast(drsSeqDruidBuff)
+function drsSeqCast(seq)
+  for i,spell in ipairs(seq) do 
+    if spell[3] < time() and drsSpellReady(spell[1]) then
+      spell[3] = time() + spell[2]
+      CastSpellByName(spell[1])
+      return true
+    end
+  end
+  return false
 end

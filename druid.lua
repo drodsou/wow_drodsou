@@ -4,6 +4,7 @@ MACROS
 - bearForm: /run drsForm(1)
 - catForm: /run drsForm(2)
 - bearRejuv: /run drsFormRejuv(1)
+- buff: /run drsSeqCast(drsSeqDruidBuff)
 
 ]]
 
@@ -55,3 +56,14 @@ function drsFormRejuv(f)
     drsForm(f)
   end
 end
+
+
+-- must be global
+-- macro usage: /run drsSeqCast(drsSeqDruidBuff)
+
+drsSeqDruidBuff = drsSeqCreate({
+  {"Mark of the Wild()",4},
+  {"Thorns()",4},
+})
+
+

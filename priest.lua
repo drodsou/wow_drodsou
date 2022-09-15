@@ -2,7 +2,7 @@
   For party of two
   - heal/wand-attack: /run drsDoBasicPriest()
   - escape-protect: /run drsDoEscapePriest()
-  - spell attack: /run drsDoSpellsPriest()
+  - buff: /run drsPriestBuffAssist()
 
 ]]
 
@@ -114,43 +114,15 @@ function drsDoBasicPriest()
  end
 end
 
+drsSeqPriestBuff = drsSeqCreate({
+  {"Power Word: Fortitude()",4},
+  {"Inner Fire()",4},
+})
 
--- ATTACK
-
---[[
-function drsResetPriestSpell()
-  drsPriestSeq = {
-      {"Shadow Word: Pain()", 18, time() - 3600},
-      {"Smite()", 0, time() - 3600},
-  }
-end
-drsResetPriestSpell()
-
-function drsNextPriestSpell()
-  for i,spell in ipairs(drsPriestSeq) do 
-      if spell[3] < time() then
-          spell[3] = time() + spell[2]
-          return spell[1]
-      end
-  end
-  return "none"
+function drsPriestBuffAssist()
+  if UnitExists("party1target") then TargetUnit("party1target") end
+  drsSeqCast(drsSeqPriestBuff)
 end
 
-function drsDoSpellsPriest()
-if drsIsAttackable("party1target") then
-  TargetUnit("party1target")
-  drsStartAttack()
-  local nextSpell = drsNextPriestSpell()
-  if nextSpell ~= "none" then 
-    CastSpellByName(nextSpell)
-  end
-end
 
-if drsMana("player") < 0.2 then
-  CastSpellByName("Shoot()")
-  SendChatMessage("OOM!")
-end
-end
-
-]]
 
