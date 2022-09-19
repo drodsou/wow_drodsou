@@ -18,6 +18,7 @@ function drsDoEscapePriest()
   end
   if not castDone then castDone = drsPriestShield(tgt1, 2) end
   if not castDone then castDone = drsPriestShield(tgt2, 2) end
+  if not castDone then castDone = drsPriestShield("party2", 2) end
   if not castDone then castDone = drsPriestRenew(tgt1, 0.85) end
   if not castDone then castDone = drsPriestRenew(tgt2, 0.85) end
   --if not castDone then castDone = FEAR end
@@ -47,10 +48,10 @@ function drsPriestRenew(tgt, lvl)
  return false
 end
 
-function drsPriestLesserHeal(tgt, lvl)
+function drsPriestHeal(tgt, lvl)
  if drsHealth(tgt) < lvl then
    TargetUnit(tgt)
-   CastSpellByName("Lesser Heal()")
+   CastSpellByName("Heal()")
    return true
  end
  return false
@@ -79,7 +80,8 @@ end
 
 
 -- MACRO
-function drsDoBasicPriest()
+function drsDoBasicPriest(cautious)
+ cautious = cautious or false
  local castDone = false
  local tgt1 = "party1"
  local tgt2 = "player"
@@ -91,25 +93,30 @@ function drsDoBasicPriest()
  -- heal
  if not castDone then castDone = drsPriestShield(tgt1, 0.65) end
  if not castDone then castDone = drsPriestShield(tgt2, 0.65) end
- if not castDone then castDone = drsPriestRenew(tgt1, 0.8) end
- if not castDone then castDone = drsPriestRenew(tgt2, 0.8) end
+ if not castDone then castDone = drsPriestShield("party2", 0.65) end
+--  if not castDone then castDone = drsPriestRenew(tgt1, 0.8) end
+--  if not castDone then castDone = drsPriestRenew(tgt2, 0.8) end
  if not castDone then castDone = drsPriestFade() end
- if not castDone then castDone = drsPriestLesserHeal(tgt1, 0.65) end     
+ if not castDone then castDone = drsPriestHeal(tgt1, 0.80) end     
+ if not castDone then castDone = drsPriestHeal("party2", 0.80) end     
 
  if drsIsAttackable("party1target") then
-   FollowUnit("party1")
+   if not cautious then FollowUnit("party1") end
    TargetUnit("party1target")
 
    -- attack
-   if not castDone then castDone = drsPriestPain(0.65) end     
-   if not castDone then drsStartShoot() end     
+  if not cautious then
+    if not castDone then castDone = drsPriestPain(0.65) end     
+    if not castDone then drsStartShoot() end     
+  end
 
  else
-    FollowUnit("party1")
+    if not cautious then FollowUnit("party1") end
  end
 
  -- OOM?
  if drsMana("player") < 0.2 then
+   DoEmote("oom")
    SendChatMessage("OOM!")
  end
 end
