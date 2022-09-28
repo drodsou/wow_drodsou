@@ -106,3 +106,10 @@ function drsSeqCast(seq)
   end
   return false
 end
+
+-- pet attack selected target only, in no target selected no attack
+function drsPetAttackSecure()
+  if drsIsAttackable("target") then
+    PetAttack()
+  end
+end

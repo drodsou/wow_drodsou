@@ -56,6 +56,8 @@ Return
 <^>!o::wowsend("o", False)
 <^>!p::wowsend("p", False)
 <^>!l::wowsend("l", False)
+<^>!m::wowsend("m", False)
+~F7::wowsend("F7")
 ~F8::wowsend("F8")
 
 ; -- warr + druid
