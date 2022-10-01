@@ -48,6 +48,7 @@ wowsend(key, alsoFg:=True){
   }
 }
 
+; --------------------------------- KEYS -------------
 ; -- druid + priest
 ~i::
 ;  wowsend("l", False)
@@ -55,6 +56,11 @@ wowsend(key, alsoFg:=True){
 Return
 <^>!o::wowsend("o", False)
 <^>!p::wowsend("p", False)
+
+<^>!8::wowsend("8", False)
+<^>!9::wowsend("9", False)
+<^>!0::wowsend("0", False)
+
 <^>!l::wowsend("l", False)
 <^>!m::wowsend("m", False)
 ~F7::wowsend("F7")

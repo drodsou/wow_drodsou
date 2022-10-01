@@ -113,3 +113,44 @@ function drsPetAttackSecure()
     PetAttack()
   end
 end
+
+
+
+-- /run print(UnitAttackSpeed("target"))
+-- /run print(UnitHealth("target"))
+-- /run print(UnitArmor("target"))
+-- /run local l,h,ol,oh = UnitDamage("target"); print(string.format("%.2f - %.2f; %.2f - %.2f ",l, h, ol, oh))
+
+function drsPrintUnitInfo(tgt)
+  tgt = tgt or "target"
+  if not UnitExists(tgt) then 
+    print("No target")
+    return
+  end
+
+  local name = UnitName(tgt)
+  local dmgMainLow,dmgMainHigh,dmgOffLow,dmgOffHigh = UnitDamage(tgt)
+  local speedMain, speedOff = UnitAttackSpeed(tgt)
+  local atkPower = UnitAttackPower(tgt)
+  local healthMax = UnitHealthMax(tgt)
+  local armor = UnitArmor(tgt)
+  local clss = UnitClass(tgt)
+
+  local dpsMain = (((dmgMainHigh + dmgMainLow)/2) / speedMain) + (atkPower / 14)
+  local dpsOff = 0
+  if speedOff ~= nil then 
+     dpsOff = (((dmgOffHigh + dmgOffLow)/2) / speedOff) + (atkPower / 14)
+  end 
+  
+
+  print(string.format("--- %s", name))
+  print(string.format("Damage   : %.2f - %.2f; %.2f - %.2f ", dmgMainLow, dmgMainHigh, dmgOffLow, dmgOffHigh))
+  print(string.format("Atk.Speed: %.2f; %.2f",speedMain, speedOff or 0))
+  print(string.format("Atk.Power: %.2f", atkPower))
+  print(string.format("Health   : %.0f", healthMax))
+  print(string.format("Armor    : %.0f", armor))
+  print(string.format("Class    : %s", clss))
+  print(string.format("DPS main : %.0f", dpsMain))
+  print(string.format("DPS off  : %.0f", dpsOff))
+  print(string.format("-------------------"))
+end
