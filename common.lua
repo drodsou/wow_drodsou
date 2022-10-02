@@ -12,10 +12,31 @@ function drsStartAttack()
   end
 end
 
+function drsStopAttack()
+  -- right bar, 1st from bottom
+  if IsCurrentAction(36) then 
+    UseAction(36)
+  end
+end
+
 -- right bar, 2nd from bottom
 function drsStartShoot()
   if IsAutoRepeatAction(35) == nil then 
     UseAction(35)
+  end
+end
+
+function drsStopShoot()
+  if IsAutoRepeatAction(35) ~= nil then 
+    UseAction(35)
+  end
+end
+
+function drsInCombat()
+  if UnitAffectingCombat("player") == nil then
+    return false
+  else
+    return true
   end
 end
 
@@ -136,11 +157,15 @@ function drsPrintUnitInfo(tgt)
   local armor = UnitArmor(tgt)
   local clss = UnitClass(tgt)
 
-  local dpsMain = (((dmgMainHigh + dmgMainLow)/2) / speedMain) + (atkPower / 14)
+  -- expected dps agains mob with 35% armor reduction
+  local dpsMain = (((dmgMainHigh + dmgMainLow)/2)  / speedMain) + (atkPower / 14)
   local dpsOff = 0
   if speedOff ~= nil then 
      dpsOff = (((dmgOffHigh + dmgOffLow)/2) / speedOff) + (atkPower / 14)
   end 
+  dpsMain = dpsMain * .75   -- armor
+  dpsOff = dpsOff * .75 * .50   -- armor and offhand
+  
   
 
   print(string.format("--- %s", name))
