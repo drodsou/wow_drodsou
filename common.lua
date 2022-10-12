@@ -49,6 +49,7 @@ function drsHealth(who)
   return UnitHealth(who)  / UnitHealthMax(who)
 end
 
+-- 0 to 1
 function drsMana(who)
   return UnitMana(who)  / UnitManaMax(who)
 end
@@ -63,6 +64,17 @@ function drsHasBuff(t,buf)
   end
   return false
 end
+
+-- eg shaman Rockbitter on or not
+function drsWeaponHasEnchant()
+  local mhEnchanted, _, _, ohEnchanted, _, _ = GetWeaponEnchantInfo()
+  if (mhEnchanted == 1) then
+    return true
+  else
+    return false
+  end
+end
+
 
 function drsPrintBuff()
   for i=1,40 do 

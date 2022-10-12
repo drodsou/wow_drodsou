@@ -69,6 +69,7 @@ function drsPriestFade()
 end
 
 
+-- minMana: 0 to 1
 function drsPriestPain(minMana)
   if drsMana("player") > minMana and not drsHasBuff("target","ShadowWordPain") then
     CastSpellByName("Shadow Word: Pain()")
