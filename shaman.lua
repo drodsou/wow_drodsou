@@ -21,9 +21,10 @@ end
 -- ----------------------
 
 function drsShamanBasic()
+  drsStartAttack()
   local casted = false
   if not casted then casted = drsShamanShield(0.35) end
   if not casted then casted = drsShamanWeaponEnchant(0.35) end
-  if not casted then drsStartAttack() end
+  
 end
 
