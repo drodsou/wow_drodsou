@@ -13,6 +13,7 @@ function drsShamanWeaponEnchant(minMana)
   minMana = minMana or 0.35
   if drsMana("player") > minMana and not drsWeaponHasEnchant() then
     CastSpellByName("Rockbiter Weapon()")
+    --CastSpellByName("Flametongue Weapon()")
     return true
   end
   return false
