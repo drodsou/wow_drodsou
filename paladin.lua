@@ -8,13 +8,14 @@ function drsPaladinBasic()
     CastSpellByName("Seal of Righteousness()")
     return true
   end
-  if drsSpellReady("Judgement") then
-    CastSpellByName("Judgement()")
-    return true
-  end
   if drsSpellReady("Holy Strike") then
     CastSpellByName("Holy Strike()")
     return true
   end
+  if drsSpellReady("Judgement") then
+    CastSpellByName("Judgement()")
+    return true
+  end
+
   return false
 end
