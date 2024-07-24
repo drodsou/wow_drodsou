@@ -1,4 +1,6 @@
 
+-- reload addons:  /console reloadui
+
 print("-- drodsou started")
 
 function drsVersion()
@@ -7,6 +9,9 @@ end
 
 function drsStartAttack()
   -- right bar, 1st from bottom
+  if not drsIsAttackable("target") then
+    TargetNearestEnemy()
+  end
   if not IsCurrentAction(36) then 
     UseAction(36)
   end
@@ -99,16 +104,27 @@ function drsGetSpellId(spellName)
 	return 0
 end
 
-
+-- example: drsSpellReady("Overpower")
+-- TODO: maybe it should check if its in range, but needs to be in a bar and check that slot...
 function drsSpellReady(spellName)
   local spellId = drsGetSpellId(spellName)
   if spellId == 0 then
     print("> ERROR drodsou drsGetSpellId: spellName not found " .. spellName)
     return false
   end
-  local cooldown ,_, enabled = GetSpellCooldown(spellId, "spell")
-  if cooldown == 0 then return true end
+    local cooldown ,_, enabled = GetSpellCooldown(spellId, "spell")
+  if cooldown == 0 and enabled == 1 then return true end
   return false
+end
+
+function drsSpellCooldown(spellName)
+  local spellId = drsGetSpellId(spellName)
+  if spellId == 0 then
+    print("> ERROR drodsou drsGetSpellId: spellName not found " .. spellName)
+    return 99
+  end
+  local cooldown = GetSpellCooldown(spellId, "spell")
+  if cooldown == 0 then return 0 else return GetTime()-cooldown end
 end
 
 
@@ -146,6 +162,23 @@ function drsPetAttackSecure()
     PetAttack()
   end
 end
+
+function drsFormActive()
+  local i,name,isActive,form
+  for i=1,GetNumShapeshiftForms() do
+    _,name,isActive = GetShapeshiftFormInfo(i)
+    if isActive then
+      return i
+    end
+  end
+  return 0
+end
+
+
+function drsHasShield() 
+
+end
+
 
 
 
@@ -191,3 +224,38 @@ function drsPrintUnitInfo(tgt)
   print(string.format("DPS off  : %.0f", dpsOff))
   print(string.format("-------------------"))
 end
+
+
+
+function drsHasShield()
+  local offhandItemLink = GetInventoryItemLink("player", 17)
+  if not offhandItemLink then return false end
+
+  local _, _, itemId = string.find(offhandItemLink, "item:(%d+):")
+  local itemName, _, _, _, _, itemType, itemSubType = GetItemInfo(itemId)
+
+  if itemType == "Shields" then return true else return false end
+end
+
+function drsEquip(gearName)
+    CloseMerchant()
+    for bag = 0, 4 do
+        for slot = 1, GetContainerNumSlots(bag) do
+            local itemLink = GetContainerItemLink(bag, slot)
+            if itemLink then
+              if string.find(itemLink,gearName) then
+                UseContainerItem(bag, slot)
+                return bag, slot
+              end
+            end
+        end
+    end
+    print("Gear not found in bags: " .. gearName)
+end
+
+function drsTest()
+  if drsSpellInCooldown("Shield Bash") then print("cd") else print("ready") end
+end
+
+
+
