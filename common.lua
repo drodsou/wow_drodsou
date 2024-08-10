@@ -127,7 +127,6 @@ function drsSpellCooldown(spellName)
   if cooldown == 0 then return 0 else return GetTime()-cooldown end
 end
 
-
 -- 
 --   example spells: {{"spellname()", timeoutInSeconds}, ... }
 -- {
@@ -172,11 +171,6 @@ function drsFormActive()
     end
   end
   return 0
-end
-
-
-function drsHasShield() 
-
 end
 
 
@@ -253,8 +247,18 @@ function drsEquip(gearName)
     print("Gear not found in bags: " .. gearName)
 end
 
-function drsTest()
-  if drsSpellInCooldown("Shield Bash") then print("cd") else print("ready") end
+
+-- depencencies Atlas addon
+function drsMap()
+  if IsInInstance() then
+    Atlas_Toggle()
+  else
+    if WorldMapFrame:IsShown() then
+      WorldMapFrame:Hide()
+    else
+        WorldMapFrame:Show()
+    end
+  end
 end
 
 

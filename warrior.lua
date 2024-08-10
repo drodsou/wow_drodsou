@@ -15,12 +15,16 @@ Samuel Addon (modify it addin SamuelAddon_last_swing = _last_swing where _last_s
 function drsWarriorEquip(s)
   if s == "2h" then 
     drsEquip("Whirlwind Sword") 
+  else
+    
+    drsEquip("Furious Falchion of the Tiger")
+    if s == "dw" then 
+      drsEquip("Murphstar of the Tiger")
+    elseif s == "sh" then
+      drsEquip("Collection Plate")
+    end
   end
 
-  if s == "sh" then 
-    drsEquip("Murphstar of the Tiger")
-    drsEquip("Collection Plate")
-  end
 end
 
 
@@ -78,44 +82,114 @@ function drsChargeBerserker()
 end
 
 
+-- charges and immediaty changes to berserker stance
+-- pseudo castsequence
+local cd_st = 0
+local cd_nextTime = 0
+function drsChargeDefensive()
+  if cd_nextTime > GetTime() then 
+    return 
+  end
+  cd_st = cd_st+1
+
+  if cd_st == 1 and (drsInCombat() or not drsSpellReady("Charge") or not drsIsAttackable("target")) then 
+    -- print("reset to def")
+    cd_st = 0
+    if drsFormActive() ~= 2 then
+      CastSpellByName("Defensive Stance()") 
+      return
+    end
+  end
+
+  if cd_st == 1 then 
+    CastSpellByName("Battle Stance()") 
+  elseif cd_st == 2 then 
+    CastSpellByName("Charge()") 
+    -- wait global cooldown
+    cd_nextTime = GetTime() + 1.6 -- GCD
+  elseif cd_st == 3 then 
+    CastSpellByName("Hamstring()") 
+    cd_st = 0
+  end 
+
+end
+
+
+
+
+
+
 local ActiveOverpower = false
 
+function drsWarriorOne(prio) 
+  drsStartAttack()
 
-function drsWarriorOne()
+  -- if UnitName("target") and drsFormActive() == 1 and drsSpellReady("Charge") then
+  --   CastSpellByName("Charge()")  
+
+  if ActiveOverpower and drsFormActive() == 1 then
+    CastSpellByName("OverPower()")
+    ActiveOverpower = false
+  elseif drsSpellReady("Execute") and UnitMana("player") >=15 and UnitHealth("target") <= 20 then
+    CastSpellByName("Execute()")   
+
+  elseif drsSpellReady("Bloodrage") then
+    CastSpellByName("Bloodrage()")
+  elseif not drsHasBuff("player","BattleShout") and UnitMana("player") >=10 then
+    CastSpellByName("Battle Shout()") 
+
+  elseif prio=="aoe" and drsFormActive() == 3 and drsSpellReady("Whirlwind") and UnitMana("player")>=25 then
+    CastSpellByName("Whirlwind()") 
   
-  drsStartAttack()
-  -- Execute usa TODA la rage que te quede, ojo...
-  -- Estp bien para bosses, pero para bichos normales, mejor solo whirlwind
-  -- if UnitHealth("target") < 21 then
-  --   CastSpellByName("Execute()")
-  -- else
-  if ActiveOverpower and drsFormActive() == 1 then
-    CastSpellByName("OverPower()")
-    ActiveOverpower = false
-  else
-    if drsFormActive() == 3 then
-      -- berserker: 35 rage = execute + ww
-      if UnitMana("player") >= 35 then CastSpellByName("Whirlwind()") end
-    else
-      -- not berserker: 22 rage = execute+hs
-      if UnitMana("player") >= 22 then CastSpellByName("Heroic Strike()") end
-    end
+  elseif prio=="aoe" and drsFormActive() == 1 and drsSpellReady("Thunder Clap") and UnitMana("player") >=20 then 
+    CastSpellByName("Thunder Clap()")
+  elseif prio=="aoe" and drsFormActive() ~= 3 and drsSpellReady("Cleave") and UnitMana("player") >=20 then 
+    CastSpellByName("Cleave()")     
+
+  -- elseif prio~="aoe" and GetTime()-SamuelAddon_last_swing<1.5 and UnitMana("player") >=15 then 
+    -- CastSpellByName"Slam()" 
+
+  elseif prio=="def" then
+    CastSpellByName("Shield Block()")
+    CastSpellByName("Revenge()") 
+    CastSpellByName("Sunder Armor()")
+
+
+     
+  elseif UnitMana("player") >=45 and drsSpellReady("Bloodthirst") then  -- keep rage for execute
+    CastSpellByName("Bloodthirst()")     
+  elseif drsFormActive() == 3 and drsSpellReady("Berserker Rage") then 
+    CastSpellByName("Berserker Rage()")
   end
 end
 
-function drsSlam() 
+
+
+
+function drsExecute() 
   drsStartAttack()
 
   if ActiveOverpower and drsFormActive() == 1 then
     CastSpellByName("OverPower()")
     ActiveOverpower = false
-  else
-    -- spare rage for execute
-    if GetTime()-SamuelAddon_last_swing<1 and UnitMana("player") >=15 then 
-      CastSpellByName"Slam()" 
-    end
+  elseif drsSpellReady("Execute") and UnitMana("player") >=15 and UnitHealth("target") < 21 then
+    CastSpellByName"Execute()"     
+  elseif not drsHasBuff("player","BattleShout") and UnitMana("player") >=10 then
+    CastSpellByName"Battle Shout()" 
+  elseif drsSpellReady("Bloodrage") then
+    CastSpellByName("Bloodrage()")
+  elseif drsFormActive() == 3 and drsSpellReady("Berserker Rage") then 
+    CastSpellByName("Berserker Rage()")
   end
 end
+
+
+function drsSlam()
+  if GetTime()-SamuelAddon_last_swing<1.5 and UnitMana("player") >=15 then 
+    CastSpellByName"Slam()" 
+  end
+end
+
 
 
 -- LISTENER

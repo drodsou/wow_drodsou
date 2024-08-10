@@ -2,12 +2,5 @@
 ## Title: wow_drodsou
 
 common.lua
-druid.lua
-hunter.lua
-mage.lua
-paladin.lua
-priest.lua
-rogue.lua
-shaman.lua
-warlock.lua
 warrior.lua
+partybot.lua
